@@ -18,7 +18,7 @@ A modern, lightweight code editor built with Electron and Monaco Editor. MoonIDE
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/moonide.git
+git clone https://github.com/rShuffler/moonide.git
 cd moonide
 ```
 
