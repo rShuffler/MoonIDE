@@ -4,6 +4,8 @@ A modern, lightweight code editor built with Electron and Monaco Editor. MoonIDE
 
 ![MoonIDE Screenshot](screenshot.png)
 
+![MoonIDE Screenshot](screenshot2.png)
+
 ## Features
 
 - 🚀 **Fast and Lightweight**: Built with Electron for optimal performance
