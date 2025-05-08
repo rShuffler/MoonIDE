@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoonIDE</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" data-name="vs/editor/editor.main" href="node_modules/monaco-editor/min/vs/editor/editor.main.css">
+</head>
+<body>
+    <div class="ide-container">
+        <div class="titlebar">
+            <div class="titlebar-drag">MoonIDE</div>
+            <div class="window-controls">
+                <button class="minimize">─</button>
+                <button class="maximize">□</button>
+                <button class="close">×</button>
+            </div>
+        </div>
+        
+        <div class="menu-bar">
+            <div class="menu-group">
+                <button id="newFile" class="menu-button">
+                    <svg width="16" height="16" viewBox="0 0 16 16">
+                        <path fill="currentColor" d="M9 1H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V6L9 1zm3 12H4V3h4v3h4v7z"/>
+                    </svg>
+                    Новый
+                </button>
+                <button id="openFile" class="menu-button">
+                    <svg width="16" height="16" viewBox="0 0 16 16">
+                        <path fill="currentColor" d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zM4 1v12h8V5h-4V1H4z"/>
+                    </svg>
+                    Открыть
+                </button>
+                <button id="saveFile" class="menu-button">
+                    <svg width="16" height="16" viewBox="0 0 16 16">
+                        <path fill="currentColor" d="M13 4.5V14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h6.5L13 4.5zM5 1v12h6V5h-4V1H5z"/>
+                    </svg>
+                    Сохранить
+                </button>
+                <button id="plugins" class="menu-button">
+                    <svg width="16" height="16" viewBox="0 0 16 16">
+                        <path fill="currentColor" d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                        <path fill="currentColor" d="M6.854 4.646a.5.5 0 0 1 0 .708L4.207 8l2.647 2.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708 0zm2.292 0a.5.5 0 0 0 0 .708L11.793 8l-2.647 2.646a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708 0z"/>
+                    </svg>
+                    Плагины
+                </button>
+            </div>
+        </div>
+
+        <div class="main-container">
+            <div class="sidebar">
+                <div class="sidebar-header">EXPLORER</div>
+                <div id="fileTree" class="file-tree"></div>
+            </div>
+            
+            <div class="editor-container">
+                <div id="editor"></div>
+            </div>
+        </div>
+
+        <div class="status-bar">
+            <div class="status-item">Ready</div>
+            <div class="status-item">UTF-8</div>
+            <div class="status-item">JavaScript</div>
+        </div>
+    </div>
+
+    <script>var require = { paths: { 'vs': 'node_modules/monaco-editor/min/vs' } };</script>
+    <script src="node_modules/monaco-editor/min/vs/loader.js"></script>
+    <script src="node_modules/monaco-editor/min/vs/editor/editor.main.nls.js"></script>
+    <script src="node_modules/monaco-editor/min/vs/editor/editor.main.js"></script>
+    
+    <script>
+        let editor;
+        let currentFilePath = null;
+
+        // Инициализация Monaco Editor
+        require(['vs/editor/editor.main'], function() {
+            editor = monaco.editor.create(document.getElementById('editor'), {
+                value: '',
+                language: 'javascript',
+                theme: 'vs-dark',
+                minimap: {
+                    enabled: true
+                },
+                fontSize: 14,
+                fontFamily: "'Fira Code', Consolas, 'Courier New', monospace",
+                lineNumbers: 'on',
+                roundedSelection: false,
+                scrollBeyondLastLine: false,
+                automaticLayout: true
+            });
+        });
+
+        // Управление окном
+        document.querySelector('.minimize').addEventListener('click', () => {
+            window.electronAPI.minimize();
+        });
+
+        document.querySelector('.maximize').addEventListener('click', () => {
+            window.electronAPI.maximize();
+        });
+
+        document.querySelector('.close').addEventListener('click', () => {
+            window.electronAPI.close();
+        });
+
+        // Обработчики файловых операций
+        document.getElementById('newFile').addEventListener('click', () => {
+            if (editor.getValue().trim() !== '') {
+                if (!confirm('Несохраненные изменения будут потеряны. Продолжить?')) {
+                    return;
+                }
+            }
+            editor.setValue('');
+            currentFilePath = null;
+            updateTitle();
+        });
+
+        document.getElementById('openFile').addEventListener('click', async () => {
+            const result = await window.electronAPI.openFile();
+            if (result) {
+                editor.setValue(result.content);
+                currentFilePath = result.filePath;
+                updateTitle();
+                
+                // Определяем язык на основе расширения файла
+                const extension = currentFilePath.split('.').pop().toLowerCase();
+                const languageMap = {
+                    'js': 'javascript',
+                    'ts': 'typescript',
+                    'html': 'html',
+                    'css': 'css',
+                    'scss': 'scss',
+                    'json': 'json',
+                    'md': 'markdown'
+                };
+                if (languageMap[extension]) {
+                    monaco.editor.setModelLanguage(editor.getModel(), languageMap[extension]);
+                }
+            }
+        });
+
+        document.getElementById('saveFile').addEventListener('click', async () => {
+            const content = editor.getValue();
+            const result = await window.electronAPI.saveFile({
+                content,
+                filePath: currentFilePath
+            });
+            
+            if (result) {
+                currentFilePath = result;
+                updateTitle();
+            }
+        });
+
+        // Обработчик кнопки плагинов
+        document.getElementById('plugins').addEventListener('click', () => {
+            window.electronAPI.openPlugins();
+        });
+
+        // Автосохранение
+        let autoSaveTimeout;
+        editor?.onDidChangeModelContent(() => {
+            if (autoSaveTimeout) clearTimeout(autoSaveTimeout);
+            autoSaveTimeout = setTimeout(() => {
+                if (currentFilePath) {
+                    window.electronAPI.saveFile({
+                        content: editor.getValue(),
+                        filePath: currentFilePath
+                    });
+                }
+            }, 1000);
+        });
+
+        // Обновление заголовка окна
+        function updateTitle() {
+            const fileName = currentFilePath ? currentFilePath.split('\\').pop() : 'Untitled';
+            document.querySelector('.titlebar-drag').textContent = `${fileName} - MoonIDE`;
+        }
+    </script>
+</body>
+</html> 

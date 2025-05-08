@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoonIDE - Плагины</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #1e1e1e;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .plugins-container {
+            padding: 20px;
+            color: #fff;
+            height: calc(100vh - 40px);
+            overflow-y: auto;
+        }
+
+        .search-container {
+            margin-bottom: 20px;
+            position: sticky;
+            top: 0;
+            background: #1e1e1e;
+            padding: 10px 0;
+            z-index: 100;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #3d3d3d;
+            border-radius: 4px;
+            background: #2d2d2d;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #0e639c;
+        }
+
+        .search-input::placeholder {
+            color: #666;
+        }
+
+        .plugin-card {
+            background: #2d2d2d;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #3d3d3d;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .plugin-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .plugin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .plugin-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .plugin-description {
+            color: #ccc;
+            margin-bottom: 15px;
+        }
+
+        .plugin-status {
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        .status-installed {
+            background: #2d5a27;
+            color: #fff;
+        }
+
+        .status-not-installed {
+            background: #3d3d3d;
+            color: #ccc;
+        }
+
+        .install-button {
+            background: #0e639c;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .install-button:hover {
+            background: #1177bb;
+        }
+
+        .install-button.installed {
+            background: #2d5a27;
+        }
+
+        .install-button.installed:hover {
+            background: #367c2e;
+        }
+
+        .no-results {
+            text-align: center;
+            color: #666;
+            padding: 20px;
+            font-style: italic;
+        }
+
+        /* Стилизация скроллбара */
+        .plugins-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .plugins-container::-webkit-scrollbar-track {
+            background: #1e1e1e;
+        }
+
+        .plugins-container::-webkit-scrollbar-thumb {
+            background: #3d3d3d;
+            border-radius: 4px;
+        }
+
+        .plugins-container::-webkit-scrollbar-thumb:hover {
+            background: #4d4d4d;
+        }
+    </style>
+</head>
+<body>
+    <div class="plugins-container">
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Поиск плагинов..." id="searchInput">
+        </div>
+        
+        <div id="pluginsList">
+            <div class="plugin-card">
+                <div class="plugin-header">
+                    <div class="plugin-title">C/C++</div>
+                    <div class="plugin-status status-not-installed">Не установлен</div>
+                </div>
+                <div class="plugin-description">
+                    Поддержка языков C и C++. Включает подсветку синтаксиса, автодополнение и отладку.
+                </div>
+                <button class="install-button" data-plugin="cpp">Установить</button>
+            </div>
+
+            <div class="plugin-card">
+                <div class="plugin-header">
+                    <div class="plugin-title">C#</div>
+                    <div class="plugin-status status-not-installed">Не установлен</div>
+                </div>
+                <div class="plugin-description">
+                    Поддержка языка C#. Включает подсветку синтаксиса, автодополнение и отладку.
+                </div>
+                <button class="install-button" data-plugin="csharp">Установить</button>
+            </div>
+
+            <div class="plugin-card">
+                <div class="plugin-header">
+                    <div class="plugin-title">Python</div>
+                    <div class="plugin-status status-not-installed">Не установлен</div>
+                </div>
+                <div class="plugin-description">
+                    Поддержка языка Python. Включает подсветку синтаксиса, автодополнение и отладку.
+                </div>
+                <button class="install-button" data-plugin="python">Установить</button>
+            </div>
+
+            <div class="plugin-card">
+                <div class="plugin-header">
+                    <div class="plugin-title">Java</div>
+                    <div class="plugin-status status-not-installed">Не установлен</div>
+                </div>
+                <div class="plugin-description">
+                    Поддержка языка Java. Включает подсветку синтаксиса, автодополнение и отладку.
+                </div>
+                <button class="install-button" data-plugin="java">Установить</button>
+            </div>
+
+            <div class="plugin-card">
+                <div class="plugin-header">
+                    <div class="plugin-title">TypeScript</div>
+                    <div class="plugin-status status-not-installed">Не установлен</div>
+                </div>
+                <div class="plugin-description">
+                    Поддержка языка TypeScript. Включает подсветку синтаксиса, автодополнение и отладку.
+                </div>
+                <button class="install-button" data-plugin="typescript">Установить</button>
+            </div>
+
+            <div class="plugin-card">
+                <div class="plugin-header">
+                    <div class="plugin-title">PHP</div>
+                    <div class="plugin-status status-not-installed">Не установлен</div>
+                </div>
+                <div class="plugin-description">
+                    Поддержка языка PHP. Включает подсветку синтаксиса, автодополнение и отладку.
+                </div>
+                <button class="install-button" data-plugin="php">Установить</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Функция для обновления состояния плагинов
+        function updatePluginState(installedPlugins) {
+            document.querySelectorAll('.plugin-card').forEach(card => {
+                const plugin = card.querySelector('.install-button').dataset.plugin;
+                const status = card.querySelector('.plugin-status');
+                const button = card.querySelector('.install-button');
+
+                if (installedPlugins.includes(plugin)) {
+                    status.textContent = 'Установлен';
+                    status.className = 'plugin-status status-installed';
+                    button.textContent = 'Удалить';
+                    button.classList.add('installed');
+                } else {
+                    status.textContent = 'Не установлен';
+                    status.className = 'plugin-status status-not-installed';
+                    button.textContent = 'Установить';
+                    button.classList.remove('installed');
+                }
+            });
+        }
+
+        // Загружаем состояние плагинов при открытии окна
+        window.electronAPI.onPluginsStateUpdate((installedPlugins) => {
+            updatePluginState(installedPlugins);
+        });
+
+        // Функция поиска плагинов
+        function searchPlugins(query) {
+            const cards = document.querySelectorAll('.plugin-card');
+            const pluginsList = document.getElementById('pluginsList');
+            let hasResults = false;
+
+            cards.forEach(card => {
+                const title = card.querySelector('.plugin-title').textContent.toLowerCase();
+                const description = card.querySelector('.plugin-description').textContent.toLowerCase();
+                const searchQuery = query.toLowerCase();
+
+                if (title.includes(searchQuery) || description.includes(searchQuery)) {
+                    card.style.display = 'block';
+                    hasResults = true;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Показываем сообщение, если ничего не найдено
+            let noResults = document.querySelector('.no-results');
+            if (!hasResults) {
+                if (!noResults) {
+                    noResults = document.createElement('div');
+                    noResults.className = 'no-results';
+                    pluginsList.appendChild(noResults);
+                }
+                noResults.textContent = 'Плагины не найдены';
+            } else if (noResults) {
+                noResults.remove();
+            }
+        }
+
+        // Обработчик поиска
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', (e) => {
+            searchPlugins(e.target.value);
+        });
+
+        // Обработчики установки плагинов
+        document.querySelectorAll('.install-button').forEach(button => {
+            button.addEventListener('click', async () => {
+                const plugin = button.dataset.plugin;
+                const card = button.closest('.plugin-card');
+                const status = card.querySelector('.plugin-status');
+                
+                try {
+                    if (button.classList.contains('installed')) {
+                        await window.electronAPI.uninstallPlugin(plugin);
+                        status.textContent = 'Не установлен';
+                        status.className = 'plugin-status status-not-installed';
+                        button.textContent = 'Установить';
+                        button.classList.remove('installed');
+                    } else {
+                        await window.electronAPI.installPlugin(plugin);
+                        status.textContent = 'Установлен';
+                        status.className = 'plugin-status status-installed';
+                        button.textContent = 'Удалить';
+                        button.classList.add('installed');
+                    }
+                } catch (error) {
+                    alert('Ошибка при работе с плагином: ' + error.message);
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

@@ -4,8 +4,6 @@ A modern, lightweight code editor built with Electron and Monaco Editor. MoonIDE
 
 ![MoonIDE Screenshot](screenshot.png)
 
-![MoonIDE Screenshot](screenshot2.png)
-
 ## Features
 
 - 🚀 **Fast and Lightweight**: Built with Electron for optimal performance
@@ -20,7 +18,7 @@ A modern, lightweight code editor built with Electron and Monaco Editor. MoonIDE
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/rShuffler/moonide.git
+git clone https://github.com/yourusername/moonide.git
 cd moonide
 ```
 
@@ -105,4 +103,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 Your Name - [@yourtwitter](https://twitter.com/yourtwitter)
 
-Project Link: [https://github.com/yourusername/moonide](https://github.com/yourusername/moonide)
+Project Link: [https://github.com/yourusername/moonide](https://github.com/yourusername/moonide) 
