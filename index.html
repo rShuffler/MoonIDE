@@ -62,7 +62,22 @@
         <div class="status-bar">
             <div class="status-item">Ready</div>
             <div class="status-item">UTF-8</div>
-            <div class="status-item">JavaScript</div>
+            <div class="status-item language-select" id="languageSelect">
+                <span id="currentLanguage">JavaScript</span>
+                <div id="languageDropdown" class="dropdown-content" style="display:none;">
+                    <div data-lang="javascript">JavaScript</div>
+                    <div data-lang="typescript">TypeScript</div>
+                    <div data-lang="python">Python</div>
+                    <div data-lang="cpp">C/C++</div>
+                    <div data-lang="csharp">C#</div>
+                    <div data-lang="java">Java</div>
+                    <div data-lang="php">PHP</div>
+                    <div data-lang="html">HTML</div>
+                    <div data-lang="css">CSS</div>
+                    <div data-lang="json">JSON</div>
+                    <div data-lang="markdown">Markdown</div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -136,9 +151,9 @@
                     'json': 'json',
                     'md': 'markdown'
                 };
-                if (languageMap[extension]) {
-                    monaco.editor.setModelLanguage(editor.getModel(), languageMap[extension]);
-                }
+                const lang = languageMap[extension] || 'plaintext';
+                monaco.editor.setModelLanguage(editor.getModel(), lang);
+                updateLanguageStatus(lang);
             }
         });
 
@@ -178,6 +193,50 @@
         function updateTitle() {
             const fileName = currentFilePath ? currentFilePath.split('\\').pop() : 'Untitled';
             document.querySelector('.titlebar-drag').textContent = `${fileName} - MoonIDE`;
+        }
+
+        const languageMap = {
+            javascript: 'JavaScript',
+            typescript: 'TypeScript',
+            python: 'Python',
+            cpp: 'C/C++',
+            csharp: 'C#',
+            java: 'Java',
+            php: 'PHP',
+            html: 'HTML',
+            css: 'CSS',
+            json: 'JSON',
+            markdown: 'Markdown'
+        };
+
+        const languageSelect = document.getElementById('languageSelect');
+        const languageDropdown = document.getElementById('languageDropdown');
+        const currentLanguage = document.getElementById('currentLanguage');
+
+        // Показать/скрыть выпадающее меню
+        languageSelect.addEventListener('click', (e) => {
+            e.stopPropagation();
+            languageDropdown.style.display = languageDropdown.style.display === 'block' ? 'none' : 'block';
+        });
+
+        // Скрыть меню при клике вне
+        document.addEventListener('click', () => {
+            languageDropdown.style.display = 'none';
+        });
+
+        // Обработка выбора языка
+        languageDropdown.querySelectorAll('div').forEach(item => {
+            item.addEventListener('click', () => {
+                const lang = item.getAttribute('data-lang');
+                monaco.editor.setModelLanguage(editor.getModel(), lang);
+                currentLanguage.textContent = languageMap[lang] || lang;
+                languageDropdown.style.display = 'none';
+            });
+        });
+
+        // При открытии файла — обновлять надпись
+        function updateLanguageStatus(lang) {
+            currentLanguage.textContent = languageMap[lang] || lang;
         }
     </script>
 </body>

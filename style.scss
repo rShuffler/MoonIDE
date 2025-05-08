@@ -167,4 +167,36 @@ body {
     .status-item {
         color: rgba(255, 255, 255, 0.8);
     }
+}
+
+.language-select {
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        bottom: 24px;
+        left: 0;
+        background: #252526;
+        border: 1px solid #404040;
+        border-radius: 4px;
+        min-width: 120px;
+        z-index: 1000;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+
+        div {
+            padding: 8px 16px;
+            color: #d4d4d4;
+            cursor: pointer;
+            &:hover {
+                background: #007acc;
+                color: #fff;
+            }
+        }
+    }
+    &:hover .dropdown-content, .dropdown-content:focus {
+        display: block;
+    }
 } 
