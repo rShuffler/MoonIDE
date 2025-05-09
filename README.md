@@ -99,8 +99,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Monaco Editor](https://microsoft.github.io/monaco-editor/)
 - [VS Code](https://code.visualstudio.com/)
 
-## Contact
-
-Your Name - [@yourtwitter](https://twitter.com/yourtwitter)
-
-Project Link: [https://github.com/yourusername/moonide](https://github.com/yourusername/moonide) 
